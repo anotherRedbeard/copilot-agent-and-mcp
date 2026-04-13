@@ -91,7 +91,30 @@
 .bookAuthor {
   font-size: 0.98rem;
   color: #555;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.bookDate {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  color: #888;
+  margin-bottom: 0.75rem;
+}
+
+.bookDescription {
+  font-size: 0.9rem;
+  color: #555;
+  line-height: 1.55;
+  margin: 0 0 1rem 0;
+  padding-top: 0.5rem;
+  border-top: 1px solid #f0f0f0;
+  flex-grow: 1;
+}
+
+.bookCardExpanded {
+  min-height: 220px;
 }
 
 .heartBtn {

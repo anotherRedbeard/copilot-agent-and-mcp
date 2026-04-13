@@ -57,7 +57,7 @@ const BookList = () => {
           {books.map(book => {
             const isFavorite = favorites.some(fav => fav.id === book.id);
             return (
-              <div className={styles.bookCard + ' ' + styles.bookCardWithHeart} key={book.id}>
+              <div className={styles.bookCard + ' ' + styles.bookCardWithHeart + (book.description ? ' ' + styles.bookCardExpanded : '')} key={book.id}>
                 {isFavorite && (
                   <span className={styles.favoriteHeart} title="In Favorites">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="#e25555" stroke="#e25555" strokeWidth="1.5">
@@ -67,6 +67,20 @@ const BookList = () => {
                 )}
                 <div className={styles.bookTitle}>{book.title}</div>
                 <div className={styles.bookAuthor}>by {book.author}</div>
+                {book.date && (
+                  <div className={styles.bookDate}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                      <line x1="16" y1="2" x2="16" y2="6"/>
+                      <line x1="8" y1="2" x2="8" y2="6"/>
+                      <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                    {new Date(book.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                  </div>
+                )}
+                {book.description && (
+                  <p className={styles.bookDescription}>{book.description}</p>
+                )}
                 <button
                   className={styles.simpleBtn}
                   onClick={() => handleAddFavorite(book.id)}
