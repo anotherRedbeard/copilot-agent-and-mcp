@@ -39,6 +39,9 @@ describe('Auth API', () => {
     const res = await request(app).post('/api/login').send(testUser);
     expect(res.statusCode).toBe(200);
     expect(res.body.token).toBeDefined();
+    // generated-by-copilot: login response must include role
+    expect(res.body.role).toBeDefined();
+    expect(res.body.role).toBe('member');
   });
 
   it('POST /api/login should fail with wrong password', async () => {

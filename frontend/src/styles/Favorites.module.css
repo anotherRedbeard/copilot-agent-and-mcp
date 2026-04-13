@@ -1,0 +1,168 @@
+.favGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+  width: 100%;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+.favCard {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  padding: 1.5rem 1rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 160px;
+  transition: box-shadow 0.2s;
+}
+
+.favCard:hover {
+  box-shadow: 0 4px 16px rgba(32, 178, 170, 0.15);
+}
+
+.favTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: #20b2aa;
+}
+
+.favAuthor {
+  font-size: 0.98rem;
+  color: #555;
+  margin-bottom: 0.75rem;
+}
+
+.removeBtn {
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background 0.2s;
+  margin-bottom: 1rem;
+}
+
+.removeBtn:hover {
+  background: #c0392b;
+}
+
+.commentSection {
+  margin-top: auto;
+  border-top: 1px solid #efefef;
+  padding-top: 0.75rem;
+}
+
+.commentLabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.35rem;
+}
+
+.commentText {
+  font-size: 0.92rem;
+  color: #444;
+  font-style: italic;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.4;
+}
+
+.noComment {
+  font-size: 0.88rem;
+  color: #bbb;
+  font-style: italic;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.commentTextarea {
+  width: 100%;
+  padding: 0.4rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+  resize: vertical;
+  box-sizing: border-box;
+  margin-bottom: 0.5rem;
+  font-family: inherit;
+}
+
+.commentTextarea:focus {
+  outline: none;
+  border-color: #20b2aa;
+  box-shadow: 0 0 0 2px rgba(32, 178, 170, 0.15);
+}
+
+.commentActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.saveBtn {
+  background: #20b2aa;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.saveBtn:hover {
+  background: #178d8d;
+}
+
+.editBtn {
+  background: none;
+  color: #20b2aa;
+  border: 1px solid #20b2aa;
+  border-radius: 4px;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.editBtn:hover {
+  background: #20b2aa;
+  color: #fff;
+}
+
+.cancelBtn {
+  background: none;
+  color: #888;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cancelBtn:hover {
+  background: #f0f0f0;
+}
+
+.errorBanner {
+  background: #fdecea;
+  color: #b71c1c;
+  border: 1px solid #f5c6c6;
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  margin: 1rem auto;
+  max-width: 600px;
+  font-size: 0.95rem;
+  text-align: center;
+}

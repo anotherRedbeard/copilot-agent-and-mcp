@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const username = useAppSelector(state => state.user.username);
+  // generated-by-copilot: read role from Redux state for display in header
+  const role = useAppSelector(state => state.user.role);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -66,7 +68,24 @@ const Header = () => {
               Favorites
             </a>
           </nav>
-          <span style={{ color: '#fff', fontWeight: 600, whiteSpace: 'nowrap', display: 'inline-block' }}>Hi, {username}</span>
+          <span style={{ color: '#fff', fontWeight: 600, whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+            Hi, {username}
+            {role && (
+              <span style={{
+                fontSize: '0.7rem',
+                fontWeight: 700,
+                background: role === 'administrator' ? '#e05c00' : '#155f5b',
+                color: '#fff',
+                borderRadius: '3px',
+                padding: '0.15rem 0.5rem',
+                letterSpacing: '0.5px',
+                textTransform: 'capitalize',
+                border: '1px solid rgba(255,255,255,0.4)',
+              }}>
+                {role}
+              </span>
+            )}
+          </span>
           <button id="logout" onClick={handleLogout} style={{ padding: '0.3rem 1rem', fontSize: '1rem', background: '#fff', color: '#20b2aa', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Logout</button>
         </div>
       )}

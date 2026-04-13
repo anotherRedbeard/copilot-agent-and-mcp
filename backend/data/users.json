@@ -2,26 +2,46 @@
   {
     "username": "sandra",
     "password": "sandra",
+    "role": "member",
     "favorites": [
       "1",
-      "2",
       "7",
       "15",
       "9",
       "6",
-      "5",
       "16",
       "14",
       "20",
-      "21",
-      "3"
-    ]
+      "21"
+    ],
+    "favoriteComments": {
+      "1": "test comment123"
+    }
   },
   {
     "username": "e2euser579",
     "password": "e2epass44",
+    "role": "member",
     "favorites": [
       "1"
     ]
+  },
+  {
+    "username": "admin",
+    "password": "admin",
+    "role": "administrator",
+    "favorites": []
+  },
+  {
+    "username": "test",
+    "password": "test",
+    "role": "member",
+    "favorites": []
+  },
+  {
+    "username": "foo",
+    "password": "bar",
+    "role": "member",
+    "favorites": []
   }
 ]

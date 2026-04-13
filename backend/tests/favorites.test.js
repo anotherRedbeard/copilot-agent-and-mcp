@@ -10,8 +10,9 @@ const booksFile = path.join(__dirname, '../data/test-books.json');
 // Helper to get a valid JWT
 const jwt = require('jsonwebtoken');
 const SECRET_KEY = 'test_secret';
-function getToken(username = 'sandra') {
-  return jwt.sign({ username }, SECRET_KEY, { expiresIn: '1h' });
+// generated-by-copilot: include role in JWT payload to match updated auth structure
+function getToken(username = 'sandra', role = 'member') {
+  return jwt.sign({ username, role }, SECRET_KEY, { expiresIn: '1h' });
 }
 
 const app = express();
@@ -149,5 +150,61 @@ describe('Favorites API', () => {
     const res = await request(app)
       .delete('/api/favorites/1');
     expect(res.statusCode).toBe(401);
+  });
+
+  it('PATCH /api/favorites/:bookId/comment should save a comment', async () => {
+    const token = getToken('sandra');
+    const users = JSON.parse(fs.readFileSync(usersFile, 'utf-8'));
+    const sandra = users.find(u => u.username === 'sandra');
+    const bookId = sandra.favorites[0];
+    const res = await request(app)
+      .patch(`/api/favorites/${bookId}/comment`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ comment: 'Great read!' });
+    expect(res.statusCode).toBe(200);
+    expect(res.body.comment).toBe('Great read!');
+    const updatedUsers = JSON.parse(fs.readFileSync(usersFile, 'utf-8'));
+    const updatedSandra = updatedUsers.find(u => u.username === 'sandra');
+    expect(updatedSandra.favoriteComments[bookId]).toBe('Great read!');
+  });
+
+  it('PATCH /api/favorites/:bookId/comment should 404 for book not in favorites', async () => {
+    const token = getToken('sandra');
+    const res = await request(app)
+      .patch('/api/favorites/99999/comment')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ comment: 'test' });
+    expect(res.statusCode).toBe(404);
+  });
+
+  it('PATCH /api/favorites/:bookId/comment should 400 when comment is missing', async () => {
+    const token = getToken('sandra');
+    const users = JSON.parse(fs.readFileSync(usersFile, 'utf-8'));
+    const sandra = users.find(u => u.username === 'sandra');
+    const bookId = sandra.favorites[0];
+    const res = await request(app)
+      .patch(`/api/favorites/${bookId}/comment`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({});
+    expect(res.statusCode).toBe(400);
+  });
+
+  it('PATCH /api/favorites/:bookId/comment should fail without auth', async () => {
+    const res = await request(app)
+      .patch('/api/favorites/1/comment')
+      .send({ comment: 'test' });
+    expect(res.statusCode).toBe(401);
+  });
+
+  it('GET /api/favorites should include comment field', async () => {
+    const token = getToken('sandra');
+    const res = await request(app)
+      .get('/api/favorites')
+      .set('Authorization', `Bearer ${token}`);
+    expect(res.statusCode).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
+    res.body.forEach(book => {
+      expect(book).toHaveProperty('comment');
+    });
   });
 });
