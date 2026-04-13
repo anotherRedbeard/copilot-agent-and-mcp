@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { fetchFavorites } from '../store/favoritesSlice';
+import { fetchFavorites, removeFavorite } from '../store/favoritesSlice';
 import { useNavigate } from 'react-router-dom';
 
 const Favorites = () => {
@@ -45,6 +45,21 @@ const Favorites = () => {
           {favorites.map(book => (
             <li key={book.id}>
               <strong>{book.title}</strong> by {book.author}
+              {' '}
+              <button
+                onClick={() => dispatch(removeFavorite({ token, bookId: book.id }))}
+                style={{
+                  marginLeft: '1rem',
+                  background: '#e74c3c',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '4px',
+                  padding: '0.25rem 0.75rem',
+                  cursor: 'pointer',
+                }}
+              >
+                Remove
+              </button>
             </li>
           ))}
         </ul>
