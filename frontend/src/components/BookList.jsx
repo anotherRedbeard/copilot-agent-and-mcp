@@ -1,10 +1,161 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchBooks, setSortBy, setSortOrder } from '../store/booksSlice';
 import { addFavorite, fetchFavorites } from '../store/favoritesSlice';
+import { fetchReviews, fetchAverageRating, submitReview, clearSubmitError } from '../store/reviewsSlice';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/BookList.module.css';
+
+// generated-by-copilot: star rating display component
+const StarRating = ({ rating, onRate, interactive = false }) => {
+  const [hovered, setHovered] = useState(0);
+  return (
+    <span className={styles.starRating}>
+      {[1, 2, 3, 4, 5].map(star => (
+        <span
+          key={star}
+          className={`${styles.star} ${(interactive && hovered >= star) || rating >= star ? styles.starFilled : styles.starEmpty}`}
+          onClick={interactive ? () => onRate(star) : undefined}
+          onMouseEnter={interactive ? () => setHovered(star) : undefined}
+          onMouseLeave={interactive ? () => setHovered(0) : undefined}
+          role={interactive ? 'button' : undefined}
+          tabIndex={interactive ? 0 : undefined}
+          onKeyDown={interactive ? (e) => { if (e.key === 'Enter' || e.key === ' ') onRate(star); } : undefined}
+          aria-label={interactive ? `Rate ${star} star${star > 1 ? 's' : ''}` : `${star} star${star > 1 ? 's' : ''}`}
+        >
+          ★
+        </span>
+      ))}
+    </span>
+  );
+};
+
+// generated-by-copilot: review form component for submitting a new review
+const ReviewForm = ({ bookId, token, dispatch, submitStatus, submitError }) => {
+  const [rating, setRating] = useState(0);
+  const [reviewText, setReviewText] = useState('');
+  const [validationError, setValidationError] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setValidationError('');
+    dispatch(clearSubmitError());
+    if (rating < 1 || rating > 5) {
+      setValidationError('Please select a rating (1-5 stars)');
+      return;
+    }
+    if (!reviewText.trim()) {
+      setValidationError('Please enter review text');
+      return;
+    }
+    const result = await dispatch(submitReview({ token, bookId, rating, reviewText: reviewText.trim() }));
+    if (result.type === 'reviews/submitReview/fulfilled') {
+      setRating(0);
+      setReviewText('');
+      dispatch(fetchReviews(bookId));
+      dispatch(fetchAverageRating(bookId));
+    }
+  };
+
+  return (
+    <form className={styles.reviewForm} onSubmit={handleSubmit}>
+      <div className={styles.reviewFormRating}>
+        <span className={styles.reviewFormLabel}>Your Rating:</span>
+        <StarRating rating={rating} onRate={setRating} interactive />
+      </div>
+      <textarea
+        className={styles.reviewTextarea}
+        rows={3}
+        value={reviewText}
+        onChange={e => setReviewText(e.target.value)}
+        placeholder="Write your review..."
+        maxLength={1000}
+      />
+      {validationError && <div className={styles.reviewError}>{validationError}</div>}
+      {submitError && <div className={styles.reviewError}>{submitError}</div>}
+      <button
+        type="submit"
+        className={styles.submitReviewBtn}
+        disabled={submitStatus === 'loading'}
+      >
+        {submitStatus === 'loading' ? 'Submitting...' : 'Submit Review'}
+      </button>
+    </form>
+  );
+};
+
+// generated-by-copilot: reviews section for displaying and submitting reviews on a book card
+const ReviewsSection = ({ bookId, token, dispatch, reviewsState, averageData, submitStatus, submitError, username }) => {
+  const [expanded, setExpanded] = useState(false);
+  const bookReviews = reviewsState?.reviews || [];
+  const reviewsStatus = reviewsState?.status || 'idle';
+  const avg = averageData || { averageRating: 0, totalReviews: 0 };
+  const hasReviewed = bookReviews.some(r => r.username === username);
+
+  useEffect(() => {
+    dispatch(fetchAverageRating(bookId));
+  }, [dispatch, bookId]);
+
+  const handleToggle = () => {
+    if (!expanded) {
+      dispatch(fetchReviews(bookId));
+    }
+    setExpanded(!expanded);
+  };
+
+  return (
+    <div className={styles.reviewsSection}>
+      <div className={styles.reviewsSummary}>
+        <StarRating rating={Math.round(avg.averageRating)} />
+        <span className={styles.avgRatingText}>
+          {avg.totalReviews > 0 ? `${avg.averageRating} (${avg.totalReviews} review${avg.totalReviews !== 1 ? 's' : ''})` : 'No reviews yet'}
+        </span>
+      </div>
+      <button className={styles.toggleReviewsBtn} onClick={handleToggle}>
+        {expanded ? 'Hide Reviews' : 'Show Reviews'}
+      </button>
+      {expanded && (
+        <div className={styles.reviewsExpanded}>
+          {reviewsStatus === 'loading' && <div className={styles.reviewsLoading}>Loading reviews...</div>}
+          {reviewsStatus === 'failed' && <div className={styles.reviewError}>Failed to load reviews.</div>}
+          {reviewsStatus === 'succeeded' && (
+            <>
+              {bookReviews.length === 0 ? (
+                <div className={styles.noReviews}>No reviews yet. Be the first!</div>
+              ) : (
+                <div className={styles.reviewsList}>
+                  {bookReviews.map(review => (
+                    <div key={review.id} className={styles.reviewItem}>
+                      <div className={styles.reviewHeader}>
+                        <span className={styles.reviewUser}>{review.username}</span>
+                        <StarRating rating={review.rating} />
+                      </div>
+                      <p className={styles.reviewText}>{review.reviewText}</p>
+                      <span className={styles.reviewDate}>
+                        {new Date(review.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {!hasReviewed && token && (
+                <ReviewForm
+                  bookId={bookId}
+                  token={token}
+                  dispatch={dispatch}
+                  submitStatus={submitStatus}
+                  submitError={submitError}
+                />
+              )}
+              {hasReviewed && <div className={styles.alreadyReviewed}>You have already reviewed this book.</div>}
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const BookList = () => {
   const dispatch = useAppDispatch();
@@ -13,8 +164,13 @@ const BookList = () => {
   const sortBy = useAppSelector(state => state.books.sortBy);
   const sortOrder = useAppSelector(state => state.books.sortOrder);
   const token = useAppSelector(state => state.user.token);
+  const username = useAppSelector(state => state.user.username);
   const navigate = useNavigate();
   const favorites = useAppSelector(state => state.favorites.items);
+  const reviewsByBookId = useAppSelector(state => state.reviews.byBookId);
+  const averages = useAppSelector(state => state.reviews.averages);
+  const submitStatus = useAppSelector(state => state.reviews.submitStatus);
+  const submitError = useAppSelector(state => state.reviews.submitError);
 
   useEffect(() => {
     if (!token) {
@@ -115,6 +271,16 @@ const BookList = () => {
                 >
                   {isFavorite ? 'In Favorites' : 'Add to Favorites'}
                 </button>
+                <ReviewsSection
+                  bookId={book.id}
+                  token={token}
+                  dispatch={dispatch}
+                  reviewsState={reviewsByBookId[book.id]}
+                  averageData={averages[book.id]}
+                  submitStatus={submitStatus}
+                  submitError={submitError}
+                  username={username}
+                />
               </div>
             );
           })}
