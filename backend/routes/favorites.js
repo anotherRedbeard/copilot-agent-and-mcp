@@ -2,6 +2,7 @@ const express = require('express');
 
 function createFavoritesRouter({ usersFile, booksFile, readJSON, writeJSON, authenticateToken }) {
   const router = express.Router();
+  router.use(apiLimiter);
 
   router.get('/', authenticateToken, (req, res) => {
     const users = readJSON(usersFile);
