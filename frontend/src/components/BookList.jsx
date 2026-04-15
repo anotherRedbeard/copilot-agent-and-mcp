@@ -1,7 +1,7 @@
 
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { fetchBooks } from '../store/booksSlice';
+import { fetchBooks, setSortBy, setSortOrder } from '../store/booksSlice';
 import { addFavorite, fetchFavorites } from '../store/favoritesSlice';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/BookList.module.css';
@@ -10,6 +10,8 @@ const BookList = () => {
   const dispatch = useAppDispatch();
   const books = useAppSelector(state => state.books.items);
   const status = useAppSelector(state => state.books.status);
+  const sortBy = useAppSelector(state => state.books.sortBy);
+  const sortOrder = useAppSelector(state => state.books.sortOrder);
   const token = useAppSelector(state => state.user.token);
   const navigate = useNavigate();
   const favorites = useAppSelector(state => state.favorites.items);
@@ -21,7 +23,15 @@ const BookList = () => {
     }
     dispatch(fetchBooks());
     dispatch(fetchFavorites(token));
-  }, [dispatch, token, navigate]);
+  }, [dispatch, token, navigate, sortBy, sortOrder]);
+
+  const handleSortByChange = (e) => {
+    dispatch(setSortBy(e.target.value));
+  };
+
+  const handleToggleOrder = () => {
+    dispatch(setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc'));
+  };
 
   const handleAddFavorite = async (bookId) => {
     if (!token) {
@@ -38,6 +48,24 @@ const BookList = () => {
   return (
     <div>
       <h2>Books</h2>
+      <div className={styles.sortControls}>
+        <label htmlFor="sortBy">Sort by:</label>
+        <select id="sortBy" value={sortBy} onChange={handleSortByChange} className={styles.sortSelect}>
+          <option value="">Default</option>
+          <option value="title">Title</option>
+          <option value="author">Author</option>
+        </select>
+        {sortBy && (
+          <button
+            className={styles.sortOrderBtn}
+            onClick={handleToggleOrder}
+            aria-label={`Sort ${sortOrder === 'asc' ? 'ascending' : 'descending'}`}
+            title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
+          >
+            {sortOrder === 'asc' ? '↑ A–Z' : '↓ Z–A'}
+          </button>
+        )}
+      </div>
       {books.length === 0 ? (
         <div style={{
           background: '#fff',

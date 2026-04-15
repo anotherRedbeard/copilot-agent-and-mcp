@@ -1,14 +1,27 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-export const fetchBooks = createAsyncThunk('books/fetchBooks', async () => {
-  const res = await fetch('http://localhost:4000/api/books');
+export const fetchBooks = createAsyncThunk('books/fetchBooks', async (_, { getState }) => {
+  const { sortBy, sortOrder } = getState().books;
+  const params = new URLSearchParams();
+  if (sortBy) {
+    params.set('sortBy', sortBy);
+    params.set('order', sortOrder);
+  }
+  const res = await fetch(`http://localhost:4000/api/books?${params.toString()}`);
   return res.json();
 });
 
 const booksSlice = createSlice({
   name: 'books',
-  initialState: { items: [], status: 'idle' },
-  reducers: {},
+  initialState: { items: [], status: 'idle', sortBy: '', sortOrder: 'asc' },
+  reducers: {
+    setSortBy(state, action) {
+      state.sortBy = action.payload;
+    },
+    setSortOrder(state, action) {
+      state.sortOrder = action.payload;
+    },
+  },
   extraReducers: builder => {
     builder
       .addCase(fetchBooks.pending, state => { state.status = 'loading'; })
@@ -20,4 +33,5 @@ const booksSlice = createSlice({
   },
 });
 
+export const { setSortBy, setSortOrder } = booksSlice.actions;
 export default booksSlice.reducer;
