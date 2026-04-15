@@ -43,11 +43,5 @@
     "password": "bar",
     "role": "member",
     "favorites": []
-  },
-  {
-    "username": "testuser",
-    "password": "testpass123",
-    "role": "member",
-    "favorites": []
   }
 ]
