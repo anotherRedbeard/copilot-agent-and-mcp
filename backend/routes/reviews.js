@@ -1,7 +1,7 @@
 const express = require('express');
 
 // generated-by-copilot: book reviews API routes
-function createReviewsRouter({ booksFile, reviewsFile, readJSON, writeJSON, authenticateToken, apiLimiter }) {
+function createReviewsRouter({ booksFile, reviewsFile, readJSON, writeJSON, authenticateToken }) {
   const router = express.Router();
 
   // GET /api/books/:id/reviews - Get all reviews for a book
@@ -34,7 +34,7 @@ function createReviewsRouter({ booksFile, reviewsFile, readJSON, writeJSON, auth
   });
 
   // POST /api/books/:id/reviews - Submit a new review (authenticated, rate-limited)
-  router.post('/:id/reviews', apiLimiter, authenticateToken, (req, res) => {
+  router.post('/:id/reviews', authenticateToken, (req, res) => {
     const { id } = req.params;
     const { rating, reviewText } = req.body;
 

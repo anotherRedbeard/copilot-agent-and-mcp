@@ -48,7 +48,7 @@ function authenticateToken(req, res, next) {
 
 
 
-// generated-by-copilot: rate limiter for authenticated write operations
+// generated-by-copilot: rate limiter for API endpoints
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per window
@@ -59,14 +59,13 @@ const apiLimiter = rateLimit({
 
 // Use central API router
 const createApiRouter = require('./routes');
-app.use('/api', createApiRouter({
+app.use('/api', apiLimiter, createApiRouter({
   usersFile,
   booksFile,
   reviewsFile,
   readJSON,
   writeJSON,
   authenticateToken,
-  apiLimiter,
   SECRET_KEY
 }));
 
