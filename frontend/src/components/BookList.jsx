@@ -23,13 +23,7 @@ const BookList = () => {
     }
     dispatch(fetchBooks());
     dispatch(fetchFavorites(token));
-  }, [dispatch, token, navigate]);
-
-  useEffect(() => {
-    if (token) {
-      dispatch(fetchBooks());
-    }
-  }, [dispatch, sortBy, sortOrder, token]);
+  }, [dispatch, token, navigate, sortBy, sortOrder]);
 
   const handleSortByChange = (e) => {
     dispatch(setSortBy(e.target.value));
