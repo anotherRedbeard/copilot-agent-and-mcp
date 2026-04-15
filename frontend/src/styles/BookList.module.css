@@ -156,3 +156,47 @@
   box-shadow: none !important;
   background: none !important;
 }
+
+.sortControls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.sortControls label {
+  font-weight: 500;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.sortSelect {
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+  background: #fff;
+  color: #333;
+  cursor: pointer;
+}
+
+.sortSelect:focus {
+  outline: 2px solid #20b2aa;
+  border-color: #20b2aa;
+}
+
+.sortOrderBtn {
+  background: #20b2aa;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.sortOrderBtn:hover {
+  background: #178d8d;
+}
