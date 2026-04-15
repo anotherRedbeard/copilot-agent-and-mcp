@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const path = require('path');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 const PORT = 4000;
@@ -47,6 +48,15 @@ function authenticateToken(req, res, next) {
 
 
 
+// generated-by-copilot: rate limiter for authenticated write operations
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per window
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: 'Too many requests, please try again later' },
+});
+
 // Use central API router
 const createApiRouter = require('./routes');
 app.use('/api', createApiRouter({
@@ -56,6 +66,7 @@ app.use('/api', createApiRouter({
   readJSON,
   writeJSON,
   authenticateToken,
+  apiLimiter,
   SECRET_KEY
 }));
 

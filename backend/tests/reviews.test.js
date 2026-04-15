@@ -34,6 +34,7 @@ app.use('/api', createApiRouter({
       return res.sendStatus(403);
     }
   },
+  apiLimiter: (req, res, next) => next(),
   SECRET_KEY,
 }));
 

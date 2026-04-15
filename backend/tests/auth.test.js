@@ -11,6 +11,7 @@ app.use('/api', createApiRouter({
   readJSON: (file) => require('fs').existsSync(file) ? JSON.parse(require('fs').readFileSync(file, 'utf-8')) : [],
   writeJSON: (file, data) => require('fs').writeFileSync(file, JSON.stringify(data, null, 2)),
   authenticateToken: (req, res, next) => next(),
+  apiLimiter: (req, res, next) => next(),
   SECRET_KEY: 'test_secret',
 }));
 
