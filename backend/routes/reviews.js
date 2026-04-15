@@ -63,7 +63,8 @@ function createReviewsRouter({ booksFile, reviewsFile, readJSON, writeJSON, auth
     }
 
     const newReview = {
-      id: Date.now().toString(),
+      // generated-by-copilot: combine timestamp with random suffix for unique IDs
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
       bookId: id,
       username: req.user.username,
       rating: numRating,

@@ -21,7 +21,7 @@ const StarRating = ({ rating, onRate, interactive = false }) => {
           onMouseLeave={interactive ? () => setHovered(0) : undefined}
           role={interactive ? 'button' : undefined}
           tabIndex={interactive ? 0 : undefined}
-          onKeyDown={interactive ? (e) => { if (e.key === 'Enter' || e.key === ' ') onRate(star); } : undefined}
+          onKeyDown={interactive ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onRate(star); } } : undefined}
           aria-label={interactive ? `Rate ${star} star${star > 1 ? 's' : ''}` : `${star} star${star > 1 ? 's' : ''}`}
         >
           ★
