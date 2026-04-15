@@ -32,6 +32,19 @@ export const removeFavorite = createAsyncThunk('favorites/removeFavorite', async
   return bookId;
 });
 
+// generated-by-copilot: thunk to clear all favorites
+export const clearAllFavorites = createAsyncThunk('favorites/clearAllFavorites', async (token) => {
+  const res = await fetch('http://localhost:4000/api/favorites', {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) {
+    throw new Error('Failed to clear all favorites');
+  }
+});
+
 export const updateFavoriteComment = createAsyncThunk('favorites/updateFavoriteComment', async ({ token, bookId, comment }) => {
   const res = await fetch(`http://localhost:4000/api/favorites/${bookId}/comment`, {
     method: 'PATCH',
@@ -71,6 +84,9 @@ const favoritesSlice = createSlice({
       .addCase(updateFavoriteComment.fulfilled, (state, action) => {
         const book = state.items.find(b => b.id === action.payload.bookId);
         if (book) book.comment = action.payload.comment;
+      })
+      .addCase(clearAllFavorites.fulfilled, (state) => {
+        state.items = [];
       });
   },
 });

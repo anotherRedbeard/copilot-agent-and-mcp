@@ -47,4 +47,26 @@ describe('Book Favorites App', () => {
     cy.visit('http://localhost:5173/books');
     cy.url().should('eq', 'http://localhost:5173/');
   });
+
+  // generated-by-copilot: test for Clear All Favorites button
+  it('should clear all favorites when Clear All is confirmed', () => {
+    // Login first
+    cy.contains('Login').click();
+    cy.get('input[name="username"]').type(user.username);
+    cy.get('input[name="password"]').type(user.password);
+    cy.get('button#login').click();
+    // Add a book to favorites
+    cy.contains('Books').click();
+    cy.contains('h2', 'Books').should('exist');
+    cy.get('button').contains('Add to Favorites').first().click();
+    // Navigate to favorites
+    cy.get('a#favorites-link').click();
+    cy.get('h2').contains('My Favorite Books').should('exist');
+    cy.contains('Clear All').should('exist');
+    // Stub confirm to return true
+    cy.window().then(win => cy.stub(win, 'confirm').returns(true));
+    cy.contains('Clear All').click();
+    // Favorites list should now be empty
+    cy.contains('No favorite books yet.').should('exist');
+  });
 });

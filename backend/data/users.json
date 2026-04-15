@@ -3,20 +3,8 @@
     "username": "sandra",
     "password": "sandra",
     "role": "member",
-    "favorites": [
-      "1",
-      "7",
-      "15",
-      "9",
-      "6",
-      "16",
-      "14",
-      "20",
-      "21"
-    ],
-    "favoriteComments": {
-      "1": "test comment123"
-    }
+    "favorites": [],
+    "favoriteComments": {}
   },
   {
     "username": "e2euser579",

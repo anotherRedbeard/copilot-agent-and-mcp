@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { fetchFavorites, removeFavorite, updateFavoriteComment } from '../store/favoritesSlice';
+import { fetchFavorites, removeFavorite, updateFavoriteComment, clearAllFavorites } from '../store/favoritesSlice';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/Favorites.module.css';
 
@@ -11,6 +11,7 @@ const Favorites = () => {
   const token = useAppSelector(state => state.user.token);
   const navigate = useNavigate();
   const [removeError, setRemoveError] = useState('');
+  const [clearAllError, setClearAllError] = useState('');
   const [commentEditing, setCommentEditing] = useState({});
   const [commentDrafts, setCommentDrafts] = useState({});
   const [commentErrors, setCommentErrors] = useState({});
@@ -28,6 +29,15 @@ const Favorites = () => {
     dispatch(removeFavorite({ token, bookId }))
       .unwrap()
       .catch(err => setRemoveError(err.message || 'Failed to remove favorite.'));
+  };
+
+  // generated-by-copilot: clear all favorites with confirmation dialog
+  const handleClearAll = () => {
+    if (!window.confirm('Are you sure you want to remove all favorites? This cannot be undone.')) return;
+    setClearAllError('');
+    dispatch(clearAllFavorites(token))
+      .unwrap()
+      .catch(err => setClearAllError(err.message || 'Failed to clear all favorites.'));
   };
 
   const handleEditComment = (book) => {
@@ -63,6 +73,7 @@ const Favorites = () => {
     <div>
       <h2>My Favorite Books</h2>
       {removeError && <div className={styles.errorBanner}>{removeError}</div>}
+      {clearAllError && <div className={styles.errorBanner}>{clearAllError}</div>}
       {favorites.length === 0 ? (
         <div style={{
           background: '#fff',
@@ -80,6 +91,12 @@ const Favorites = () => {
           </p>
         </div>
       ) : (
+        <>
+          <div className={styles.clearAllBar}>
+            <button className={styles.clearAllBtn} onClick={handleClearAll}>
+              Clear All
+            </button>
+          </div>
         <div className={styles.favGrid}>
           {favorites.map(book => (
             <div className={styles.favCard} key={book.id}>
@@ -127,6 +144,7 @@ const Favorites = () => {
             </div>
           ))}
         </div>
+        </>
       )}
     </div>
   );
