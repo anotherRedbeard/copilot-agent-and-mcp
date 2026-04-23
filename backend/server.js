@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const path = require('path');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 const PORT = 4000;
@@ -20,6 +21,10 @@ const booksFile = isTest
 const usersFile = isTest
   ? path.join(__dirname, 'data', 'test-users.json')
   : path.join(__dirname, 'data', 'users.json');
+// generated-by-copilot: reviews data file for the book review system
+const reviewsFile = isTest
+  ? path.join(__dirname, 'data', 'test-reviews.json')
+  : path.join(__dirname, 'data', 'reviews.json');
 
 // Helper functions
 function readJSON(file) {
@@ -43,11 +48,22 @@ function authenticateToken(req, res, next) {
 
 
 
+// generated-by-copilot: rate limiter for API endpoints (disabled in test mode)
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per window
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: 'Too many requests, please try again later' },
+  skip: () => isTest,
+});
+
 // Use central API router
 const createApiRouter = require('./routes');
-app.use('/api', createApiRouter({
+app.use('/api', apiLimiter, createApiRouter({
   usersFile,
   booksFile,
+  reviewsFile,
   readJSON,
   writeJSON,
   authenticateToken,
