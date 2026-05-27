@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const path = require('path');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 const PORT = 4000;
@@ -11,6 +12,17 @@ const SECRET_KEY = 'your_jwt_secret';
 
 app.use(cors());
 app.use(bodyParser.json());
+
+// Apply rate limiting to all API routes to mitigate denial-of-service
+// and brute-force attacks (CodeQL js/missing-rate-limiting).
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: 'Too many requests, please try again later.' },
+});
+app.use('/api', apiLimiter);
 
 
 const isTest = process.env.TEST_MODE === '1';
