@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+        {
+            "type": "command",
+        "bash": "echo \"Session started: $(date) | Prompt: ${COPILOT_AGENT_PROMPT}\" >> logs/session.log",
+        "powershell": "Add-Content -Path logs/session.log -Value \"Session started: $(Get-Date) | Prompt: $env:COPILOT_AGENT_PROMPT\"",
+            "cwd": ".",
+            "timeoutSec": 10
+        }
+    ]
+  }
+}
