@@ -4,8 +4,11 @@ import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const username = useAppSelector(state => state.user.username);
+  const role = useAppSelector(state => state.user.role);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const roleLabel = role === 'administrator' ? 'Administrator' : 'Member';
 
   const handleLogout = () => {
     dispatch(logout());
@@ -66,7 +69,12 @@ const Header = () => {
               Favorites
             </a>
           </nav>
-          <span style={{ color: '#fff', fontWeight: 600, whiteSpace: 'nowrap', display: 'inline-block' }}>Hi, {username}</span>
+          <span style={{ color: '#fff', fontWeight: 600, whiteSpace: 'nowrap', display: 'inline-block' }}>
+            Hi, {username}
+            <span id="user-role" style={{ marginLeft: '0.5rem', fontWeight: 500, fontSize: '0.85rem', background: 'rgba(255,255,255,0.2)', padding: '0.15rem 0.5rem', borderRadius: '4px' }}>
+              {roleLabel}
+            </span>
+          </span>
           <button id="logout" onClick={handleLogout} style={{ padding: '0.3rem 1rem', fontSize: '1rem', background: '#fff', color: '#20b2aa', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Logout</button>
         </div>
       )}

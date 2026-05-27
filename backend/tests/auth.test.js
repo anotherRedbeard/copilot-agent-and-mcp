@@ -50,4 +50,27 @@ describe('Auth API', () => {
     const res = await request(app).post('/api/login').send({ username: '' });
     expect(res.statusCode).toBe(401);
   });
+
+  it('POST /api/register should default new users to member role', async () => {
+    const memberUser = { username: 'memberuser', password: 'memberpass' };
+    await request(app).post('/api/register').send(memberUser);
+    const res = await request(app).post('/api/login').send(memberUser);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.role).toBe('member');
+  });
+
+  it('POST /api/register should accept administrator role', async () => {
+    const adminUser = { username: 'adminuser', password: 'adminpass', role: 'administrator' };
+    await request(app).post('/api/register').send(adminUser);
+    const res = await request(app).post('/api/login').send({ username: adminUser.username, password: adminUser.password });
+    expect(res.statusCode).toBe(200);
+    expect(res.body.role).toBe('administrator');
+  });
+
+  it('POST /api/register should ignore invalid roles and default to member', async () => {
+    const badRoleUser = { username: 'badroleuser', password: 'pass', role: 'superuser' };
+    await request(app).post('/api/register').send(badRoleUser);
+    const res = await request(app).post('/api/login').send({ username: badRoleUser.username, password: badRoleUser.password });
+    expect(res.body.role).toBe('member');
+  });
 });
