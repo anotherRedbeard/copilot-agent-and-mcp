@@ -2,256 +2,329 @@
   {
     "id": "1",
     "title": "To Kill a Mockingbird",
-    "author": "Harper Lee"
+    "author": "Harper Lee",
+    "isbn": "0446310789",
+    "date": "1960-07-11",
+    "summary": "Set in the American South during the 1930s, this Pulitzer Prize-winning novel follows the story of Scout Finch and her father Atticus as he defends a black man accused of rape, exploring themes of racial injustice, moral growth, and the loss of innocence."
   },
   {
     "id": "2",
     "title": "1984",
-    "author": "George Orwell"
+    "author": "George Orwell",
+    "isbn": "0451524935",
+    "date": "1949-06-08",
+    "summary": "A dystopian social science fiction that follows Winston Smith as he rebels against the totalitarian regime of Oceania. The novel explores themes of surveillance, censorship, and the manipulation of truth."
   },
   {
     "id": "3",
     "title": "Pride and Prejudice",
-    "author": "Jane Austen"
+    "author": "Jane Austen",
+    "isbn": "0141439518",
+    "date": "1813-01-28",
+    "summary": "A romantic novel following Elizabeth Bennet as she deals with issues of manners, upbringing, morality, education, and marriage in the society of the landed gentry of early 19th-century England."
   },
   {
     "id": "4",
     "title": "The Great Gatsby",
-    "author": "F. Scott Fitzgerald"
+    "author": "F. Scott Fitzgerald",
+    "isbn": "0743273565",
+    "date": "1925-04-10",
+    "summary": "Set in the Jazz Age on Long Island, the novel depicts narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby and Gatsby's obsession to reunite with his former lover, Daisy Buchanan."
   },
   {
     "id": "5",
     "title": "Moby-Dick",
-    "author": "Herman Melville"
+    "author": "Herman Melville",
+    "isbn": "0142437247",
+    "date": "1851-10-18",
+    "summary": "The epic tale of Captain Ahab's obsessive quest for revenge against Moby Dick, the white whale that bit off his leg. A complex exploration of good and evil, obsession, and nature."
   },
   {
     "id": "6",
     "title": "War and Peace",
-    "author": "Leo Tolstoy"
+    "author": "Leo Tolstoy",
+    "isbn": "1400079988",
+    "date": "1869-01-01",
+    "summary": "An epic novel following five aristocratic families in Russia during the Napoleonic Era, exploring themes of love, war, marriage, and death."
   },
   {
     "id": "7",
     "title": "The Catcher in the Rye",
-    "author": "J.D. Salinger"
+    "author": "J.D. Salinger",
+    "isbn": "0316769488",
+    "date": "1951-07-16",
+    "summary": "The story of 16-year-old Holden Caulfield's three days in New York City after being expelled from his boarding school, exploring themes of teenage alienation and loss of innocence."
   },
   {
     "id": "8",
     "title": "The Hobbit",
-    "author": "J.R.R. Tolkien"
+    "author": "J.R.R. Tolkien",
+    "isbn": "0547928227",
+    "date": "1937-09-21",
+    "summary": "The adventures of home-loving hobbit Bilbo Baggins, who is convinced by the wizard Gandalf to join a group of dwarves in their quest to reclaim their mountain home from a dragon."
   },
   {
     "id": "9",
     "title": "Brave New World",
-    "author": "Aldous Huxley"
+    "author": "Aldous Huxley",
+    "isbn": "0060850524",
+    "date": "1932-01-01",
+    "summary": "Set in a futuristic World State, the novel anticipates developments in reproductive technology, sleep-learning, psychological manipulation, and classical conditioning that combine to change society."
   },
   {
     "id": "10",
     "title": "Crime and Punishment",
-    "author": "Fyodor Dostoevsky"
+    "author": "Fyodor Dostoevsky",
+    "isbn": "0679734505",
+    "date": "1866-01-01",
+    "summary": "A psychological novel that follows Rodion Raskolnikov, an impoverished ex-student in Saint Petersburg who formulates a plan to kill an unscrupulous pawnbroker for her money."
   },
   {
     "id": "11",
     "title": "The Odyssey",
-    "author": "Homer"
+    "author": "Homer",
+    "isbn": "0140268867"
   },
   {
     "id": "12",
     "title": "The Brothers Karamazov",
-    "author": "Fyodor Dostoevsky"
+    "author": "Fyodor Dostoevsky",
+    "isbn": "0374528379"
   },
   {
     "id": "13",
     "title": "Wuthering Heights",
-    "author": "Emily Brontë"
+    "author": "Emily Brontë",
+    "isbn": "0141439556"
   },
   {
     "id": "14",
     "title": "Jane Eyre",
-    "author": "Charlotte Brontë"
+    "author": "Charlotte Brontë",
+    "isbn": "0141441146"
   },
   {
     "id": "15",
     "title": "The Divine Comedy",
-    "author": "Dante Alighieri"
+    "author": "Dante Alighieri",
+    "isbn": "0451208637"
   },
   {
     "id": "16",
     "title": "The Lord of the Rings",
-    "author": "J.R.R. Tolkien"
+    "author": "J.R.R. Tolkien",
+    "isbn": "0618640157"
   },
   {
     "id": "17",
     "title": "Great Expectations",
-    "author": "Charles Dickens"
+    "author": "Charles Dickens",
+    "isbn": "0141439563"
   },
   {
     "id": "18",
     "title": "Anna Karenina",
-    "author": "Leo Tolstoy"
+    "author": "Leo Tolstoy",
+    "isbn": "0143035008"
   },
   {
     "id": "19",
     "title": "Don Quixote",
-    "author": "Miguel de Cervantes"
+    "author": "Miguel de Cervantes",
+    "isbn": "0142437230"
   },
   {
     "id": "20",
     "title": "The Grapes of Wrath",
-    "author": "John Steinbeck"
+    "author": "John Steinbeck",
+    "isbn": "0143039433"
   },
   {
     "id": "21",
     "title": "Ulysses",
-    "author": "James Joyce"
+    "author": "James Joyce",
+    "isbn": "0679722762"
   },
   {
     "id": "22",
     "title": "Madame Bovary",
-    "author": "Gustave Flaubert"
+    "author": "Gustave Flaubert",
+    "isbn": "0140449129"
   },
   {
     "id": "23",
     "title": "The Iliad",
-    "author": "Homer"
+    "author": "Homer",
+    "isbn": "0140275360"
   },
   {
     "id": "24",
     "title": "Les Misérables",
-    "author": "Victor Hugo"
+    "author": "Victor Hugo",
+    "isbn": "0451419439"
   },
   {
     "id": "25",
     "title": "A Tale of Two Cities",
-    "author": "Charles Dickens"
+    "author": "Charles Dickens",
+    "isbn": "0141439600"
   },
   {
     "id": "26",
     "title": "Fahrenheit 451",
-    "author": "Ray Bradbury"
+    "author": "Ray Bradbury",
+    "isbn": "1451673319"
   },
   {
     "id": "27",
     "title": "Dracula",
-    "author": "Bram Stoker"
+    "author": "Bram Stoker",
+    "isbn": "0141439846"
   },
   {
     "id": "28",
     "title": "Frankenstein",
-    "author": "Mary Shelley"
+    "author": "Mary Shelley",
+    "isbn": "0141439471"
   },
   {
     "id": "29",
     "title": "The Sun Also Rises",
-    "author": "Ernest Hemingway"
+    "author": "Ernest Hemingway",
+    "isbn": "0743297332"
   },
   {
     "id": "30",
     "title": "The Picture of Dorian Gray",
-    "author": "Oscar Wilde"
+    "author": "Oscar Wilde",
+    "isbn": "0141439570"
   },
   {
     "id": "31",
     "title": "The Count of Monte Cristo",
-    "author": "Alexandre Dumas"
+    "author": "Alexandre Dumas",
+    "isbn": "0140449266"
   },
   {
     "id": "32",
     "title": "The Old Man and the Sea",
-    "author": "Ernest Hemingway"
+    "author": "Ernest Hemingway",
+    "isbn": "0684801223"
   },
   {
     "id": "33",
     "title": "Lolita",
-    "author": "Vladimir Nabokov"
+    "author": "Vladimir Nabokov",
+    "isbn": "0679723165"
   },
   {
     "id": "34",
     "title": "Catch-22",
-    "author": "Joseph Heller"
+    "author": "Joseph Heller",
+    "isbn": "0684833392"
   },
   {
     "id": "35",
     "title": "The Stranger",
-    "author": "Albert Camus"
+    "author": "Albert Camus",
+    "isbn": "0679720201"
   },
   {
     "id": "36",
     "title": "Rebecca",
-    "author": "Daphne du Maurier"
+    "author": "Daphne du Maurier",
+    "isbn": "0380730407"
   },
   {
     "id": "37",
     "title": "The Sound and the Fury",
-    "author": "William Faulkner"
+    "author": "William Faulkner",
+    "isbn": "0679732242"
   },
   {
     "id": "38",
     "title": "David Copperfield",
-    "author": "Charles Dickens"
+    "author": "Charles Dickens",
+    "isbn": "0141439563"
   },
   {
     "id": "39",
     "title": "Gone with the Wind",
-    "author": "Margaret Mitchell"
+    "author": "Margaret Mitchell",
+    "isbn": "1451635621"
   },
   {
     "id": "40",
     "title": "The Scarlet Letter",
-    "author": "Nathaniel Hawthorne"
+    "author": "Nathaniel Hawthorne",
+    "isbn": "0142437261"
   },
   {
     "id": "41",
     "title": "Persuasion",
-    "author": "Jane Austen"
+    "author": "Jane Austen",
+    "isbn": "0141439686"
   },
   {
     "id": "42",
     "title": "Emma",
-    "author": "Jane Austen"
+    "author": "Jane Austen",
+    "isbn": "0141439587"
   },
   {
     "id": "43",
     "title": "Sense and Sensibility",
-    "author": "Jane Austen"
+    "author": "Jane Austen",
+    "isbn": "0141439662"
   },
   {
     "id": "44",
     "title": "The Alchemist",
-    "author": "Paulo Coelho"
+    "author": "Paulo Coelho",
+    "isbn": "0062315007"
   },
   {
     "id": "45",
     "title": "The Kite Runner",
-    "author": "Khaled Hosseini"
+    "author": "Khaled Hosseini",
+    "isbn": "1594631931"
   },
   {
     "id": "46",
     "title": "Life of Pi",
-    "author": "Yann Martel"
+    "author": "Yann Martel",
+    "isbn": "0156027328"
   },
   {
     "id": "47",
     "title": "Slaughterhouse-Five",
-    "author": "Kurt Vonnegut"
+    "author": "Kurt Vonnegut",
+    "isbn": "0385333849"
   },
   {
     "id": "48",
     "title": "Beloved",
-    "author": "Toni Morrison"
+    "author": "Toni Morrison",
+    "isbn": "1400033416"
   },
   {
     "id": "49",
     "title": "The Road",
-    "author": "Cormac McCarthy"
+    "author": "Cormac McCarthy",
+    "isbn": "0307387899"
   },
   {
     "id": "50",
     "title": "The Secret Garden",
-    "author": "Frances Hodgson Burnett"
+    "author": "Frances Hodgson Burnett",
+    "isbn": "0142437054"
   },
   {
     "id": "1749802373204",
     "title": "Test Book",
-    "author": "Test Author"
+    "author": "Test Author",
+    "isbn": "0000000000",
+    "date": "2025-06-20",
+    "summary": "A placeholder entry for testing purposes."
   }
 ]

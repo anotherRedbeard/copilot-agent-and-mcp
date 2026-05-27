@@ -1,0 +1,51 @@
+.detailsPanel {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  padding: 1.2rem;
+  margin-top: 2rem;
+  position: sticky;
+  top: 5.5rem;
+}
+
+.title {
+  margin: 0 0 1rem;
+  color: #0f6f6a;
+  font-size: 1.2rem;
+}
+
+.placeholder {
+  margin: 0;
+  color: #666;
+  line-height: 1.45;
+}
+
+.detailsList {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.detailsRow {
+  margin: 0;
+}
+
+.detailsRow dt {
+  font-weight: 700;
+  color: #24413e;
+  margin-bottom: 0.2rem;
+}
+
+.detailsRow dd {
+  margin: 0;
+  color: #333;
+  line-height: 1.5;
+}
+
+@media (max-width: 980px) {
+  .detailsPanel {
+    position: static;
+    margin-top: 0;
+  }
+}
