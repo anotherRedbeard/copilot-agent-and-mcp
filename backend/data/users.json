@@ -15,6 +15,17 @@
       "14",
       "20",
       "21"
+    ],
+    "favoriteComments": {
+      "1": "test comment"
+    }
+  },
+  {
+    "username": "e2euser960",
+    "password": "e2epass326",
+    "role": "member",
+    "favorites": [
+      "1"
     ]
   }
 ]

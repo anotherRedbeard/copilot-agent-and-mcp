@@ -29,6 +29,19 @@ export const removeFavorite = createAsyncThunk('favorites/removeFavorite', async
   return bookId;
 });
 
+// generated-by-copilot: save a comment for a favorited book
+export const saveComment = createAsyncThunk('favorites/saveComment', async ({ token, bookId, comment }) => {
+  await fetch(`http://localhost:4000/api/favorites/${bookId}/comment`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ comment }),
+  });
+  return { bookId, comment };
+});
+
 const favoritesSlice = createSlice({
   name: 'favorites',
   initialState: { items: [], status: 'idle' },
@@ -46,6 +59,12 @@ const favoritesSlice = createSlice({
       })
       .addCase(removeFavorite.fulfilled, (state, action) => {
         state.items = state.items.filter(b => b.id !== action.payload);
+      })
+      // generated-by-copilot: update the comment on the matching favorite item in state
+      .addCase(saveComment.fulfilled, (state, action) => {
+        const { bookId, comment } = action.payload;
+        const item = state.items.find(b => b.id === bookId);
+        if (item) item.comment = comment;
       });
   },
 });
