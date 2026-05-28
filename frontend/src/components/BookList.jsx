@@ -1,18 +1,20 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { fetchBooks, setSort } from '../store/booksSlice';
+import { fetchBooks, setSort, setSearchTerm, selectFilteredBooks } from '../store/booksSlice';
 import { addFavorite, removeFavorite, fetchFavorites } from '../store/favoritesSlice';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/BookList.module.css';
 import BookDetails from './BookDetails';
+import SearchInput from './SearchInput';
 
 const BookList = () => {
   const dispatch = useAppDispatch();
-  const books = useAppSelector(state => state.books.items);
+  const books = useAppSelector(selectFilteredBooks);
   const status = useAppSelector(state => state.books.status);
   const sortBy = useAppSelector(state => state.books.sortBy);
   const order = useAppSelector(state => state.books.order);
+  const searchTerm = useAppSelector(state => state.books.searchTerm);
   const token = useAppSelector(state => state.user.token);
   const navigate = useNavigate();
   const favorites = useAppSelector(state => state.favorites.items);
@@ -70,6 +72,14 @@ const BookList = () => {
     dispatch(setSort({ sortBy, order: order === 'asc' ? 'desc' : 'asc' }));
   };
 
+  const handleSearchChange = (nextTerm) => {
+    dispatch(setSearchTerm(nextTerm));
+  };
+
+  const clearSearch = () => {
+    dispatch(setSearchTerm(''));
+  };
+
   if (status === 'loading') return <div>Loading...</div>;
   if (status === 'failed') return <div>Failed to load books.</div>;
 
@@ -77,6 +87,7 @@ const BookList = () => {
     <div className={styles.booksPage}>
       <h2>Books</h2>
       <div className={styles.sortControls} aria-label="Sort books">
+        <SearchInput value={searchTerm} onChange={handleSearchChange} onClear={clearSearch} />
         <label htmlFor="book-sort-field" className={styles.sortLabel}>Sort by:</label>
         <select
           id="book-sort-field"
@@ -111,8 +122,8 @@ const BookList = () => {
           textAlign: 'center',
           color: '#888',
         }}>
-          <p>No books available.</p>
-          <p>Check back later or add a new book if you have permission.</p>
+          <p>{searchTerm ? 'No matching books found.' : 'No books available.'}</p>
+          <p>{searchTerm ? 'Try a different search phrase.' : 'Check back later or add a new book if you have permission.'}</p>
         </div>
       ) : (
         <div className={styles.booksContent}>

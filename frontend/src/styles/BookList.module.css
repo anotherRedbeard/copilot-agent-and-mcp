@@ -9,6 +9,75 @@
   flex-wrap: wrap;
   margin: 0.5rem 0 1rem 0;
 }
+
+.searchInputWrap {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.searchLabel {
+  font-weight: 600;
+  color: #333;
+}
+
+.searchInputShell {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid #b8c4d2;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  padding: 0.2rem 0.3rem;
+  min-width: 290px;
+}
+
+.searchInputShell:focus-within {
+  border-color: #20b2aa;
+  box-shadow: 0 0 0 3px rgba(32, 178, 170, 0.2);
+}
+
+.searchIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #5f6b7a;
+  margin-left: 0.3rem;
+}
+
+.searchInput {
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #1f2933;
+  font-size: 1rem;
+  line-height: 1.2;
+  min-width: 200px;
+  width: 100%;
+  padding: 0.35rem 0.2rem;
+}
+
+.searchInput::placeholder {
+  color: #7b8794;
+}
+
+.clearSearchBtn {
+  border: none;
+  background: #e6f5f4;
+  color: #12766f;
+  border-radius: 7px;
+  padding: 0.3rem 0.55rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.clearSearchBtn:hover {
+  background: #20b2aa;
+  color: #fff;
+}
 .sortLabel {
   font-weight: 600;
   color: #333;
@@ -213,6 +282,15 @@
 }
 
 @media (max-width: 980px) {
+  .searchInputWrap {
+    width: 100%;
+  }
+
+  .searchInputShell {
+    min-width: 0;
+    width: 100%;
+  }
+
   .booksContent {
     grid-template-columns: 1fr;
   }
