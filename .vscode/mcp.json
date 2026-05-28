@@ -5,8 +5,16 @@
     "book-database": {
       "command": "node",
       "args": [
-        "/path-to/github-copilot-agent/book-database/build/index.js"
+        "/Users/andrewredman/src/github/copilot-mcp/build/index.js"
       ]
-    }
+    },
+    "getMeFunction": {
+      "type": "http",
+      "url": "https://apim-bhe6kbtzfmg74.azure-api.net/obo-mcp-server/mcp"
+    },
+    				"github-spaces": {
+					"type": "http",
+					"url": "https://api.githubcopilot.com/mcp/x/copilot_spaces"
+				}
   }
 }
