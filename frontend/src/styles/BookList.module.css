@@ -2,6 +2,47 @@
   width: 100%;
 }
 
+.sortControls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin: 0.5rem 0 1rem 0;
+}
+.sortLabel {
+  font-weight: 600;
+  color: #333;
+}
+.sortSelect {
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.sortOrderBtn {
+  background: #20b2aa;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.sortOrderBtn:hover {
+  background: #178d8d;
+}
+.sortOrderBtn[aria-pressed="true"] {
+  background: #178d8d;
+}
+.sortIndicator {
+  font-size: 0.9rem;
+  color: #666;
+  font-style: italic;
+}
+
 .booksContent {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);

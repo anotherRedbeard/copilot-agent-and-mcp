@@ -1,7 +1,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { fetchBooks } from '../store/booksSlice';
+import { fetchBooks, setSort } from '../store/booksSlice';
 import { addFavorite, removeFavorite, fetchFavorites } from '../store/favoritesSlice';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/BookList.module.css';
@@ -11,6 +11,8 @@ const BookList = () => {
   const dispatch = useAppDispatch();
   const books = useAppSelector(state => state.books.items);
   const status = useAppSelector(state => state.books.status);
+  const sortBy = useAppSelector(state => state.books.sortBy);
+  const order = useAppSelector(state => state.books.order);
   const token = useAppSelector(state => state.user.token);
   const navigate = useNavigate();
   const favorites = useAppSelector(state => state.favorites.items);
@@ -23,7 +25,7 @@ const BookList = () => {
     }
     dispatch(fetchBooks());
     dispatch(fetchFavorites(token));
-  }, [dispatch, token, navigate]);
+  }, [dispatch, token, navigate, sortBy, order]);
 
   useEffect(() => {
     if (!books.length) {
@@ -60,12 +62,44 @@ const BookList = () => {
     dispatch(fetchFavorites(token));
   };
 
+  const handleSortFieldChange = (event) => {
+    dispatch(setSort({ sortBy: event.target.value, order }));
+  };
+
+  const toggleOrder = () => {
+    dispatch(setSort({ sortBy, order: order === 'asc' ? 'desc' : 'asc' }));
+  };
+
   if (status === 'loading') return <div>Loading...</div>;
   if (status === 'failed') return <div>Failed to load books.</div>;
 
   return (
     <div className={styles.booksPage}>
       <h2>Books</h2>
+      <div className={styles.sortControls} aria-label="Sort books">
+        <label htmlFor="book-sort-field" className={styles.sortLabel}>Sort by:</label>
+        <select
+          id="book-sort-field"
+          className={styles.sortSelect}
+          value={sortBy}
+          onChange={handleSortFieldChange}
+        >
+          <option value="title">Title</option>
+          <option value="author">Author</option>
+        </select>
+        <button
+          type="button"
+          className={styles.sortOrderBtn}
+          onClick={toggleOrder}
+          aria-label={`Toggle sort order, currently ${order === 'asc' ? 'ascending' : 'descending'}`}
+          aria-pressed={order === 'desc'}
+        >
+          {order === 'asc' ? '▲ Ascending' : '▼ Descending'}
+        </button>
+        <span className={styles.sortIndicator} aria-live="polite">
+          Sorted by {sortBy} ({order === 'asc' ? 'A→Z' : 'Z→A'})
+        </span>
+      </div>
       {books.length === 0 ? (
         <div style={{
           background: '#fff',
