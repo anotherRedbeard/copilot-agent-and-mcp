@@ -61,26 +61,40 @@ const Favorites = () => {
   if (status === 'failed') return <div>Failed to load favorites.</div>;
 
   return (
-    <div style={{ color: '#1f2933' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '700px', margin: '0 auto' }}>
-        <h2 style={{ margin: 0 }}>My Favorite Books</h2>
-        {favorites.length > 0 && (
-          <button
-            onClick={() => { setClearError(''); setShowClearConfirm(true); }}
-            aria-label="Clear all favorites"
-            style={{
-              background: '#fff',
-              color: '#b91c1c',
-              border: '1px solid #b91c1c',
-              borderRadius: '4px',
-              padding: '0.45rem 0.9rem',
-              cursor: 'pointer',
-              fontWeight: 600,
-            }}
-          >
-            Clear All
-          </button>
-        )}
+    <div style={{ color: '#1f2933', marginTop: '4.75rem', padding: '0 1rem', maxWidth: '860px', marginLeft: 'auto', marginRight: 'auto' }}>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: '1rem',
+        background: '#ffffff',
+        border: '1px solid #dbe4ee',
+        borderRadius: '10px',
+        padding: '1rem 1.15rem',
+        boxShadow: '0 4px 14px rgba(15, 23, 42, 0.06)',
+      }}>
+        <h2 style={{ margin: 0, fontSize: '1.8rem', letterSpacing: '0.2px' }}>My Favorite Books</h2>
+        <button
+          onClick={() => { if (favorites.length > 0) { setClearError(''); setShowClearConfirm(true); } }}
+          disabled={favorites.length === 0}
+          aria-label="Clear all favorites"
+          title={favorites.length === 0 ? 'No favorites to clear' : 'Clear all favorites'}
+          style={{
+            background: '#fff',
+            color: favorites.length === 0 ? '#9aa6b2' : '#b91c1c',
+            border: `1px solid ${favorites.length === 0 ? '#cbd5e1' : '#b91c1c'}`,
+            borderRadius: '4px',
+            padding: '0.45rem 0.9rem',
+            cursor: favorites.length === 0 ? 'not-allowed' : 'pointer',
+            fontWeight: 600,
+            opacity: favorites.length === 0 ? 0.8 : 1,
+            width: 'auto',
+            minWidth: '120px',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          Clear All
+        </button>
       </div>
       {favorites.length === 0 ? (
         <div style={{
@@ -99,7 +113,7 @@ const Favorites = () => {
           </p>
         </div>
       ) : (
-        <ul style={{ listStyle: 'none', padding: 0, maxWidth: '700px', margin: '1rem auto' }}>
+        <ul style={{ listStyle: 'none', padding: 0, margin: '1rem 0 0' }}>
           {favorites.map(book => {
             const isEditing = Object.prototype.hasOwnProperty.call(editingComment, book.id);
             const commentValue = isEditing ? editingComment[book.id] : (book.comment || '');
@@ -107,15 +121,16 @@ const Favorites = () => {
               <li
                 key={book.id}
                 style={{
-                  padding: '0.9rem 1rem',
-                  margin: '0.5rem 0',
-                  borderRadius: '6px',
-                  background: '#f4f7fb',
-                  border: '1px solid #d7e1ea',
+                  padding: '1rem 1.1rem',
+                  margin: '0.7rem 0',
+                  borderRadius: '10px',
+                  background: '#ffffff',
+                  border: '1px solid #dbe4ee',
+                  boxShadow: '0 3px 10px rgba(15, 23, 42, 0.05)',
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
+                  <span style={{ flex: 1, lineHeight: 1.35 }}>
                     <strong>{book.title}</strong> by {book.author}
                   </span>
                   <button
@@ -129,6 +144,9 @@ const Favorites = () => {
                       padding: '0.4rem 0.9rem',
                       cursor: 'pointer',
                       marginLeft: '1rem',
+                      width: 'auto',
+                      minWidth: '110px',
+                      whiteSpace: 'nowrap',
                     }}
                   >
                     Remove
@@ -160,13 +178,13 @@ const Favorites = () => {
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
                         <button
                           onClick={() => handleSaveComment(book.id)}
-                          style={{ background: '#2f6fb0', color: '#fff', border: 'none', borderRadius: '4px', padding: '0.45rem 0.9rem', cursor: 'pointer', minWidth: '82px' }}
+                          style={{ background: '#2f6fb0', color: '#fff', border: 'none', borderRadius: '4px', padding: '0.45rem 0.9rem', cursor: 'pointer', minWidth: '82px', width: 'auto' }}
                         >
                           Save
                         </button>
                         <button
                           onClick={() => setEditingComment(prev => { const next = { ...prev }; delete next[book.id]; return next; })}
-                          style={{ background: '#fff', color: '#1f2933', border: '1px solid #9aa6b2', borderRadius: '4px', padding: '0.45rem 0.9rem', cursor: 'pointer', minWidth: '82px' }}
+                          style={{ background: '#fff', color: '#1f2933', border: '1px solid #9aa6b2', borderRadius: '4px', padding: '0.45rem 0.9rem', cursor: 'pointer', minWidth: '82px', width: 'auto' }}
                         >
                           Cancel
                         </button>
@@ -180,7 +198,7 @@ const Favorites = () => {
                       <button
                         onClick={() => setEditingComment(prev => ({ ...prev, [book.id]: book.comment || '' }))}
                         aria-label={`Edit comment for ${book.title}`}
-                        style={{ background: '#fff', color: '#1f2933', border: '1px solid #9aa6b2', borderRadius: '4px', padding: '0.35rem 0.75rem', cursor: 'pointer', fontSize: '0.85rem' }}
+                        style={{ background: '#fff', color: '#1f2933', border: '1px solid #9aa6b2', borderRadius: '4px', padding: '0.35rem 0.75rem', cursor: 'pointer', fontSize: '0.85rem', width: 'auto', whiteSpace: 'nowrap' }}
                       >
                         {book.comment ? 'Edit' : 'Add comment'}
                       </button>
@@ -239,6 +257,7 @@ const Favorites = () => {
                   borderRadius: '4px',
                   padding: '0.5rem 1rem',
                   cursor: isClearing ? 'not-allowed' : 'pointer',
+                  width: 'auto',
                 }}
               >
                 Cancel
@@ -255,6 +274,7 @@ const Favorites = () => {
                   padding: '0.5rem 1rem',
                   cursor: isClearing ? 'not-allowed' : 'pointer',
                   fontWeight: 600,
+                  width: 'auto',
                 }}
               >
                 {isClearing ? 'Clearing...' : 'Clear All'}

@@ -33,7 +33,8 @@ form, ul {
   min-height: 60vh;
 }
 
-input, button {
+form input,
+form button {
   display: block;
   width: 100%;
   margin: 1rem 0;
