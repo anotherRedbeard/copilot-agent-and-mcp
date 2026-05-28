@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from '../styles/BookDetails.module.css';
+import BookReviews from './BookReviews';
 
 const BookDetails = ({ book }) => {
   if (!book) {
@@ -28,6 +29,7 @@ const BookDetails = ({ book }) => {
           <dd>{book.summary || 'Summary not available for this book.'}</dd>
         </div>
       </dl>
+      <BookReviews bookId={book.id} />
     </aside>
   );
 };
