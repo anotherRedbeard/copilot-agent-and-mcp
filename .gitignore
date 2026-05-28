@@ -20,6 +20,7 @@ backend/data/test-*.json
 # Misc
 *.local
 *.cache
+*.zip
 yarn.lock
 
 # OS
