@@ -55,7 +55,6 @@ const Favorites = () => {
       return;
     }
     setShowClearConfirm(false);
-    dispatch(fetchFavorites(token));
   };
 
   if (status === 'loading') return <div>Loading...</div>;
