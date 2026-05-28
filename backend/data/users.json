@@ -4,25 +4,23 @@
     "password": "sandra",
     "role": "administrator",
     "favorites": [
-      "1",
       "2",
-      "7",
-      "15",
-      "9",
-      "6",
-      "5",
-      "16",
-      "14",
-      "20",
-      "21"
+      "3",
+      "1"
     ],
-    "favoriteComments": {
-      "1": "test comment"
-    }
+    "favoriteComments": {}
   },
   {
     "username": "e2euser960",
     "password": "e2epass326",
+    "role": "member",
+    "favorites": [
+      "1"
+    ]
+  },
+  {
+    "username": "e2euser163",
+    "password": "e2epass738",
     "role": "member",
     "favorites": [
       "1"

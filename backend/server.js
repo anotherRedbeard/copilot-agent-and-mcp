@@ -7,7 +7,7 @@ const path = require('path');
 const rateLimit = require('express-rate-limit');
 
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 const SECRET_KEY = 'your_jwt_secret';
 
 app.use(cors());
