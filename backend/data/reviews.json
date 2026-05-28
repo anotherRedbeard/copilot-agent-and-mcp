@@ -22,5 +22,13 @@
     "rating": 5,
     "text": "amazing",
     "createdAt": "2026-05-28T16:15:25.175Z"
+  },
+  {
+    "id": "1779987678015-w5o4rd83",
+    "bookId": "2",
+    "username": "e2erev7940",
+    "rating": 4,
+    "text": "Cypress review 1779987677024",
+    "createdAt": "2026-05-28T17:01:18.015Z"
   }
 ]

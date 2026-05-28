@@ -1,12 +1,22 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { fetchBooks, setSort, setSearchTerm, selectFilteredBooks } from '../store/booksSlice';
+import {
+  fetchBooks,
+  setSort,
+  setSearchTerm,
+  toggleCategory,
+  clearSelectedCategories,
+  clearAllBookFilters,
+  selectFilteredBooks,
+  selectAvailableCategories,
+} from '../store/booksSlice';
 import { addFavorite, removeFavorite, fetchFavorites } from '../store/favoritesSlice';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/BookList.module.css';
 import BookDetails from './BookDetails';
 import SearchInput from './SearchInput';
+import CategoryFilter from './CategoryFilter';
 
 const BookList = () => {
   const dispatch = useAppDispatch();
@@ -15,6 +25,8 @@ const BookList = () => {
   const sortBy = useAppSelector(state => state.books.sortBy);
   const order = useAppSelector(state => state.books.order);
   const searchTerm = useAppSelector(state => state.books.searchTerm);
+  const selectedCategories = useAppSelector(state => state.books.selectedCategories);
+  const availableCategories = useAppSelector(selectAvailableCategories);
   const token = useAppSelector(state => state.user.token);
   const navigate = useNavigate();
   const favorites = useAppSelector(state => state.favorites.items);
@@ -80,37 +92,76 @@ const BookList = () => {
     dispatch(setSearchTerm(''));
   };
 
+  const handleToggleCategory = (category) => {
+    dispatch(toggleCategory(category));
+  };
+
+  const clearCategories = () => {
+    dispatch(clearSelectedCategories());
+  };
+
+  const clearAllFilters = () => {
+    dispatch(clearAllBookFilters());
+  };
+
+  const hasActiveFilters = Boolean(searchTerm) || selectedCategories.length > 0;
+
   if (status === 'loading') return <div>Loading...</div>;
   if (status === 'failed') return <div>Failed to load books.</div>;
 
   return (
     <div className={styles.booksPage}>
       <h2>Books</h2>
-      <div className={styles.sortControls} aria-label="Sort books">
-        <SearchInput value={searchTerm} onChange={handleSearchChange} onClear={clearSearch} />
-        <label htmlFor="book-sort-field" className={styles.sortLabel}>Sort by:</label>
-        <select
-          id="book-sort-field"
-          className={styles.sortSelect}
-          value={sortBy}
-          onChange={handleSortFieldChange}
-        >
-          <option value="title">Title</option>
-          <option value="author">Author</option>
-        </select>
-        <button
-          type="button"
-          className={styles.sortOrderBtn}
-          onClick={toggleOrder}
-          aria-label={`Toggle sort order, currently ${order === 'asc' ? 'ascending' : 'descending'}`}
-          aria-pressed={order === 'desc'}
-        >
-          {order === 'asc' ? '▲ Ascending' : '▼ Descending'}
-        </button>
-        <span className={styles.sortIndicator} aria-live="polite">
-          Sorted by {sortBy} ({order === 'asc' ? 'A→Z' : 'Z→A'})
-        </span>
-      </div>
+      <section className={styles.toolbar} aria-label="Book filters and sort controls">
+        <div className={styles.toolbarMain}>
+          <SearchInput value={searchTerm} onChange={handleSearchChange} onClear={clearSearch} />
+          <CategoryFilter
+            categories={availableCategories}
+            selectedCategories={selectedCategories}
+            onToggleCategory={handleToggleCategory}
+            onClearCategories={clearCategories}
+          />
+        </div>
+        <div className={styles.toolbarSide}>
+          <label htmlFor="book-sort-field" className={styles.sortLabel}>Sort by</label>
+          <select
+            id="book-sort-field"
+            className={styles.sortSelect}
+            value={sortBy}
+            onChange={handleSortFieldChange}
+          >
+            <option value="title">Title</option>
+            <option value="author">Author</option>
+          </select>
+          <button
+            type="button"
+            className={styles.sortOrderBtn}
+            onClick={toggleOrder}
+            aria-label={`Toggle sort order, currently ${order === 'asc' ? 'ascending' : 'descending'}`}
+            aria-pressed={order === 'desc'}
+          >
+            {order === 'asc' ? 'Ascending' : 'Descending'}
+          </button>
+        </div>
+        <div className={styles.toolbarMeta}>
+          <span className={styles.resultsCount} aria-live="polite">
+            {books.length} result{books.length === 1 ? '' : 's'}
+          </span>
+          <span className={styles.sortIndicator}>
+            Sorted by {sortBy} ({order === 'asc' ? 'A-Z' : 'Z-A'})
+          </span>
+          {hasActiveFilters && (
+            <button
+              type="button"
+              className={styles.resetFiltersBtn}
+              onClick={clearAllFilters}
+              aria-label="Clear all filters"
+            >
+              Clear all filters
+            </button>
+          )}
+        </div>
+      </section>
       {books.length === 0 ? (
         <div style={{
           background: '#fff',
@@ -122,8 +173,15 @@ const BookList = () => {
           textAlign: 'center',
           color: '#888',
         }}>
-          <p>{searchTerm ? 'No matching books found.' : 'No books available.'}</p>
-          <p>{searchTerm ? 'Try a different search phrase.' : 'Check back later or add a new book if you have permission.'}</p>
+          <p>{hasActiveFilters ? 'No books match the selected filters.' : 'No books available.'}</p>
+          <p>
+            {hasActiveFilters
+              ? 'Try a different search phrase/category, or clear filters to reset the list.'
+              : 'Check back later or add a new book if you have permission.'}
+          </p>
+          {hasActiveFilters ? (
+            <button className={styles.resetFiltersBtn} type="button" onClick={clearAllFilters}>Clear all filters</button>
+          ) : null}
         </div>
       ) : (
         <div className={styles.booksContent}>
@@ -136,6 +194,7 @@ const BookList = () => {
                 <div
                   className={styles.bookCard + ' ' + styles.bookCardWithHeart + ' ' + (isSelected ? styles.selectedBookCard : '')}
                   key={book.id}
+                  data-testid="book-card"
                   onClick={() => setSelectedBookId(book.id)}
                   role="button"
                   tabIndex={0}
@@ -156,6 +215,13 @@ const BookList = () => {
                   )}
                   <div className={styles.bookTitle}>{book.title}</div>
                   <div className={styles.bookAuthor}>by {book.author}</div>
+                  <div className={styles.bookCategories}>
+                    {(book.categories || []).map((category) => (
+                      <span className={styles.categoryBadge} key={`${book.id}-${category}`}>
+                        {category}
+                      </span>
+                    ))}
+                  </div>
                   <button
                     className={styles.simpleBtn}
                     onClick={event => {

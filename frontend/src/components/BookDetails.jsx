@@ -28,6 +28,10 @@ const BookDetails = ({ book }) => {
           <dt>Summary</dt>
           <dd>{book.summary || 'Summary not available for this book.'}</dd>
         </div>
+        <div className={styles.detailsRow}>
+          <dt>Categories</dt>
+          <dd>{Array.isArray(book.categories) && book.categories.length > 0 ? book.categories.join(', ') : 'Not available'}</dd>
+        </div>
       </dl>
       <BookReviews bookId={book.id} />
     </aside>

@@ -28,5 +28,25 @@
     "favorites": [
       "1"
     ]
+  },
+  {
+    "username": "e2ecat7106",
+    "password": "e2epass6315",
+    "role": "member",
+    "favorites": []
+  },
+  {
+    "username": "e2euser479",
+    "password": "e2epass845",
+    "role": "member",
+    "favorites": [
+      "2"
+    ]
+  },
+  {
+    "username": "e2erev7940",
+    "password": "e2epass2118",
+    "role": "member",
+    "favorites": []
   }
 ]

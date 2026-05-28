@@ -20,6 +20,57 @@ describe('Books API', () => {
     expect(res.statusCode).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
     expect(res.body.length).toBeGreaterThan(0);
+    expect(Array.isArray(res.body[0].categories)).toBe(true);
+    expect(res.body[0].categories.length).toBeGreaterThan(0);
+  });
+
+  it('GET /api/books?category=fantasy should return only fantasy books', async () => {
+    const res = await request(app).get('/api/books?category=fantasy');
+    expect(res.statusCode).toBe(200);
+    expect(res.body.length).toBeGreaterThan(0);
+    res.body.forEach((book) => {
+      const categories = (book.categories || []).map(value => value.toLowerCase());
+      expect(categories).toContain('fantasy');
+    });
+  });
+
+  it('GET /api/books?category=unknown should return an empty array', async () => {
+    const res = await request(app).get('/api/books?category=unknown-category');
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual([]);
+  });
+
+  it('GET /api/books?category=all should return all books', async () => {
+    const allRes = await request(app).get('/api/books');
+    const allCategoryRes = await request(app).get('/api/books?category=all');
+
+    expect(allCategoryRes.statusCode).toBe(200);
+    expect(allCategoryRes.body.length).toBe(allRes.body.length);
+  });
+
+  it('sanitizes malformed categories into default categories', async () => {
+    const malformedApp = express();
+    malformedApp.use(express.json());
+    malformedApp.use('/api', createApiRouter({
+      usersFile: path.join(__dirname, '../data/test-users.json'),
+      booksFile: path.join(__dirname, '../data/test-books.json'),
+      readJSON: (file) => {
+        if (file.includes('test-books.json')) {
+          return [
+            { id: 'x1', title: 'Malformed Book', author: 'Nobody', categories: ['', '   ', null] },
+          ];
+        }
+
+        return require('fs').existsSync(file) ? JSON.parse(require('fs').readFileSync(file, 'utf-8')) : [];
+      },
+      writeJSON: (file, data) => require('fs').writeFileSync(file, JSON.stringify(data, null, 2)),
+      authenticateToken: (req, res, next) => next(),
+      SECRET_KEY: 'test_secret',
+    }));
+
+    const res = await request(malformedApp).get('/api/books');
+    expect(res.statusCode).toBe(200);
+    expect(res.body[0].categories).toEqual(['Classic']);
   });
 
   it('POST /api/books should not be allowed', async () => {
