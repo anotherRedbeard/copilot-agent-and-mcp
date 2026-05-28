@@ -122,6 +122,93 @@ describe('Books API', () => {
     expect(res.statusCode).toBe(400);
   });
 
+  // generated-by-copilot: recent books endpoint tests
+  describe('GET /api/books/recent', () => {
+    const fs = require('fs');
+    const testBooksFile = path.join(__dirname, '../data/test-books.json');
+
+    it('returns the 5 most recently added books by default (newest first)', async () => {
+      const all = JSON.parse(fs.readFileSync(testBooksFile, 'utf-8'));
+      const expectedIds = all.slice(-5).reverse().map(b => b.id);
+
+      const res = await request(app).get('/api/books/recent');
+      expect(res.statusCode).toBe(200);
+      expect(Array.isArray(res.body)).toBe(true);
+      expect(res.body.length).toBe(5);
+      expect(res.body.map(b => b.id)).toEqual(expectedIds);
+      expect(Array.isArray(res.body[0].categories)).toBe(true);
+    });
+
+    it('honors a valid ?limit= within range', async () => {
+      const all = JSON.parse(fs.readFileSync(testBooksFile, 'utf-8'));
+      const expectedIds = all.slice(-3).reverse().map(b => b.id);
+
+      const res = await request(app).get('/api/books/recent?limit=3');
+      expect(res.statusCode).toBe(200);
+      expect(res.body.length).toBe(3);
+      expect(res.body.map(b => b.id)).toEqual(expectedIds);
+    });
+
+    it('accepts the maximum allowed limit of 20', async () => {
+      const res = await request(app).get('/api/books/recent?limit=20');
+      expect(res.statusCode).toBe(200);
+      expect(res.body.length).toBeLessThanOrEqual(20);
+    });
+
+    it('returns 400 when limit is 0', async () => {
+      const res = await request(app).get('/api/books/recent?limit=0');
+      expect(res.statusCode).toBe(400);
+      expect(res.body.error).toMatch(/between 1 and 20/);
+    });
+
+    it('returns 400 when limit is negative', async () => {
+      const res = await request(app).get('/api/books/recent?limit=-1');
+      expect(res.statusCode).toBe(400);
+      expect(res.body.error).toMatch(/between 1 and 20/);
+    });
+
+    it('returns 400 when limit exceeds the maximum', async () => {
+      const res = await request(app).get('/api/books/recent?limit=21');
+      expect(res.statusCode).toBe(400);
+      expect(res.body.error).toMatch(/between 1 and 20/);
+    });
+
+    it('returns 400 when limit is non-numeric', async () => {
+      const res = await request(app).get('/api/books/recent?limit=abc');
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('returns 400 when limit is a non-integer number', async () => {
+      const res = await request(app).get('/api/books/recent?limit=2.5');
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('returns all available books when fewer exist than the requested limit', async () => {
+      const smallApp = express();
+      smallApp.use(express.json());
+      smallApp.use('/api', createApiRouter({
+        usersFile: path.join(__dirname, '../data/test-users.json'),
+        booksFile: path.join(__dirname, '../data/test-books.json'),
+        readJSON: (file) => {
+          if (file.includes('test-books.json')) {
+            return [
+              { id: 'a', title: 'Alpha', author: 'A' },
+              { id: 'b', title: 'Beta', author: 'B' },
+            ];
+          }
+          return require('fs').existsSync(file) ? JSON.parse(require('fs').readFileSync(file, 'utf-8')) : [];
+        },
+        writeJSON: (file, data) => require('fs').writeFileSync(file, JSON.stringify(data, null, 2)),
+        authenticateToken: (req, res, next) => next(),
+        SECRET_KEY: 'test_secret',
+      }));
+
+      const res = await request(smallApp).get('/api/books/recent?limit=10');
+      expect(res.statusCode).toBe(200);
+      expect(res.body.map(b => b.id)).toEqual(['b', 'a']);
+    });
+  });
+
   // generated-by-copilot: rating endpoint tests
   describe('PATCH /api/books/:id/rating', () => {
     const fs = require('fs');

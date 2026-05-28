@@ -113,6 +113,28 @@ function createBooksRouter({ booksFile, readJSON, writeJSON, authenticateToken }
     res.json(sorted);
   });
 
+  // generated-by-copilot: GET /books/recent — return the last N books added to the collection (newest first)
+  router.get('/recent', (req, res) => {
+    const DEFAULT_LIMIT = 5;
+    const MAX_LIMIT = 20;
+    const MIN_LIMIT = 1;
+
+    const { limit } = req.query;
+    let effectiveLimit = DEFAULT_LIMIT;
+
+    if (limit !== undefined) {
+      const parsed = Number(limit);
+      if (!Number.isInteger(parsed) || parsed < MIN_LIMIT || parsed > MAX_LIMIT) {
+        return res.status(400).json({ error: `limit must be an integer between ${MIN_LIMIT} and ${MAX_LIMIT}.` });
+      }
+      effectiveLimit = parsed;
+    }
+
+    const books = normalizeBooks(readJSON(booksFile));
+    const recent = books.slice(-effectiveLimit).reverse();
+    res.json(recent);
+  });
+
   // generated-by-copilot: PATCH /books/:id/rating — set a 1–5 star rating for a book
   router.patch('/:id/rating', (req, res) => {
     const { rating } = req.body;
