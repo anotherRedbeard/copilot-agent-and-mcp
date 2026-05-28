@@ -121,4 +121,57 @@ describe('Books API', () => {
     const res = await request(app).get('/api/books?sortBy=title&order=sideways');
     expect(res.statusCode).toBe(400);
   });
+
+  // generated-by-copilot: rating endpoint tests
+  describe('PATCH /api/books/:id/rating', () => {
+    const fs = require('fs');
+    const testBooksFile = path.join(__dirname, '../data/test-books.json');
+
+    beforeEach(() => {
+      // generated-by-copilot: reset ratings before each rating test
+      const books = JSON.parse(fs.readFileSync(testBooksFile, 'utf-8'));
+      const reset = books.map(b => { const { rating, ...rest } = b; return rest; });
+      fs.writeFileSync(testBooksFile, JSON.stringify(reset, null, 2));
+    });
+
+    it('sets a valid rating and returns the updated book', async () => {
+      const res = await request(app)
+        .patch('/api/books/1/rating')
+        .send({ rating: 4 });
+      expect(res.statusCode).toBe(200);
+      expect(res.body.id).toBe('1');
+      expect(res.body.rating).toBe(4);
+    });
+
+    it('returns 400 when rating is below 1', async () => {
+      const res = await request(app)
+        .patch('/api/books/1/rating')
+        .send({ rating: 0 });
+      expect(res.statusCode).toBe(400);
+      expect(res.body.error).toMatch(/between 1 and 5/);
+    });
+
+    it('returns 400 when rating is above 5', async () => {
+      const res = await request(app)
+        .patch('/api/books/1/rating')
+        .send({ rating: 6 });
+      expect(res.statusCode).toBe(400);
+      expect(res.body.error).toMatch(/between 1 and 5/);
+    });
+
+    it('returns 400 when rating is not an integer', async () => {
+      const res = await request(app)
+        .patch('/api/books/1/rating')
+        .send({ rating: 3.5 });
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('returns 404 when book does not exist', async () => {
+      const res = await request(app)
+        .patch('/api/books/9999/rating')
+        .send({ rating: 3 });
+      expect(res.statusCode).toBe(404);
+      expect(res.body.error).toMatch(/not found/i);
+    });
+  });
 });

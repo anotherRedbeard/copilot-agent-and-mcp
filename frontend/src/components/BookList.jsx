@@ -12,6 +12,8 @@ import {
   selectAvailableCategories,
 } from '../store/booksSlice';
 import { addFavorite, removeFavorite, fetchFavorites } from '../store/favoritesSlice';
+import { rateBook } from '../store/booksSlice';
+import StarRating from './StarRating';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/BookList.module.css';
 import BookDetails from './BookDetails';
@@ -62,6 +64,11 @@ const BookList = () => {
     () => books.find(book => book.id === selectedBookId) || null,
     [books, selectedBookId]
   );
+
+  // generated-by-copilot: dispatch rating update to the backend
+  const handleRate = (bookId, rating) => {
+    dispatch(rateBook({ bookId, rating }));
+  };
 
   const handleToggleFavorite = async (bookId, isFavorite) => {
     if (!token) {
@@ -221,6 +228,12 @@ const BookList = () => {
                         {category}
                       </span>
                     ))}
+                  </div>
+                  <div onClick={event => event.stopPropagation()}>
+                    <StarRating
+                      rating={book.rating || 0}
+                      onRate={(value) => handleRate(book.id, value)}
+                    />
                   </div>
                   <button
                     className={styles.simpleBtn}

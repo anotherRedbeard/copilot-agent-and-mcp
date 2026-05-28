@@ -113,6 +113,28 @@ function createBooksRouter({ booksFile, readJSON, writeJSON, authenticateToken }
     res.json(sorted);
   });
 
+  // generated-by-copilot: PATCH /books/:id/rating — set a 1–5 star rating for a book
+  router.patch('/:id/rating', (req, res) => {
+    const { rating } = req.body;
+    const ratingNum = Number(rating);
+
+    if (!Number.isInteger(ratingNum) || ratingNum < 1 || ratingNum > 5) {
+      return res.status(400).json({ error: 'Rating must be an integer between 1 and 5.' });
+    }
+
+    const books = readJSON(booksFile);
+    const bookIndex = books.findIndex(b => b.id === req.params.id);
+
+    if (bookIndex === -1) {
+      return res.status(404).json({ error: 'Book not found.' });
+    }
+
+    books[bookIndex] = { ...books[bookIndex], rating: ratingNum };
+    writeJSON(booksFile, books);
+
+    res.json(books[bookIndex]);
+  });
+
   // POST /books removed: adding books is not allowed
 
   return router;

@@ -22,6 +22,20 @@ const getBookCategories = (book) => {
 
 const normalizeCategoryForComparison = (value) => normalizeSearchValue(value);
 
+// generated-by-copilot: send a 1-5 rating for a book to the backend
+export const rateBook = createAsyncThunk('books/rateBook', async ({ bookId, rating }) => {
+  const res = await fetch(`http://localhost:4000/api/books/${bookId}/rating`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ rating }),
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error || 'Failed to set rating');
+  }
+  return res.json();
+});
+
 export const fetchBooks = createAsyncThunk('books/fetchBooks', async (_arg, { getState }) => {
   const { sortBy, order } = getState().books;
   const params = new URLSearchParams();
@@ -81,7 +95,13 @@ const booksSlice = createSlice({
         state.status = 'succeeded';
         state.items = action.payload;
       })
-      .addCase(fetchBooks.rejected, state => { state.status = 'failed'; });
+      .addCase(fetchBooks.rejected, state => { state.status = 'failed'; })
+      // generated-by-copilot: update the rated book in-place when the PATCH succeeds
+      .addCase(rateBook.fulfilled, (state, action) => {
+        const updated = action.payload;
+        const idx = state.items.findIndex(b => b.id === updated.id);
+        if (idx !== -1) state.items[idx] = updated;
+      });
   },
 });
 
