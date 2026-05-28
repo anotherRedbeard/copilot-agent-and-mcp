@@ -215,4 +215,58 @@ describe('Favorites API', () => {
       .send({ comment: 'test' });
     expect(res.statusCode).toBe(401);
   });
+
+  // generated-by-copilot: tests for the Clear All Favorites endpoint
+  describe('DELETE /api/favorites (clear all)', () => {
+    it('should clear all favorites and comments for the current user', async () => {
+      const token = getToken('sandra');
+      // Ensure sandra has at least one favorite with a comment
+      const books = JSON.parse(fs.readFileSync(booksFile, 'utf-8'));
+      const bookId = books[0].id;
+      await request(app)
+        .post('/api/favorites')
+        .set('Authorization', 'Bearer ' + token)
+        .send({ bookId });
+      await request(app)
+        .post(`/api/favorites/${bookId}/comment`)
+        .set('Authorization', 'Bearer ' + token)
+        .send({ comment: 'note to clear' });
+
+      const res = await request(app)
+        .delete('/api/favorites')
+        .set('Authorization', 'Bearer ' + token);
+      expect(res.statusCode).toBe(200);
+      expect(res.body.message).toMatch(/cleared/i);
+
+      const users = JSON.parse(fs.readFileSync(usersFile, 'utf-8'));
+      const sandra = users.find(u => u.username === 'sandra');
+      expect(sandra.favorites).toEqual([]);
+      expect(sandra.favoriteComments).toEqual({});
+    });
+
+    it('should be idempotent when favorites are already empty', async () => {
+      const token = getToken('sandra');
+      await request(app)
+        .delete('/api/favorites')
+        .set('Authorization', 'Bearer ' + token);
+      const res = await request(app)
+        .delete('/api/favorites')
+        .set('Authorization', 'Bearer ' + token);
+      expect(res.statusCode).toBe(200);
+      expect(res.body.message).toMatch(/cleared/i);
+    });
+
+    it('should 404 for non-existent user', async () => {
+      const token = getToken('nouser');
+      const res = await request(app)
+        .delete('/api/favorites')
+        .set('Authorization', 'Bearer ' + token);
+      expect(res.statusCode).toBe(404);
+    });
+
+    it('should fail without auth', async () => {
+      const res = await request(app).delete('/api/favorites');
+      expect(res.statusCode).toBe(401);
+    });
+  });
 });

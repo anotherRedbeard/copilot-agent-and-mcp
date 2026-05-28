@@ -42,6 +42,22 @@ export const saveComment = createAsyncThunk('favorites/saveComment', async ({ to
   return { bookId, comment };
 });
 
+// generated-by-copilot: clear all favorites for the current user
+export const clearAllFavorites = createAsyncThunk('favorites/clearAllFavorites', async ({ token }, { rejectWithValue }) => {
+  try {
+    const res = await fetch('http://localhost:4000/api/favorites', {
+      method: 'DELETE',
+      headers: { Authorization: 'Bearer ' + token },
+    });
+    if (!res.ok) {
+      return rejectWithValue(`Request failed with status ${res.status}`);
+    }
+    return true;
+  } catch (err) {
+    return rejectWithValue(err.message);
+  }
+});
+
 const favoritesSlice = createSlice({
   name: 'favorites',
   initialState: { items: [], status: 'idle' },
@@ -65,6 +81,10 @@ const favoritesSlice = createSlice({
         const { bookId, comment } = action.payload;
         const item = state.items.find(b => b.id === bookId);
         if (item) item.comment = comment;
+      })
+      // generated-by-copilot: clear all favorites locally on success
+      .addCase(clearAllFavorites.fulfilled, state => {
+        state.items = [];
       });
   },
 });

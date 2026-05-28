@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { fetchFavorites, removeFavorite, saveComment } from '../store/favoritesSlice';
+import { fetchFavorites, removeFavorite, saveComment, clearAllFavorites } from '../store/favoritesSlice';
 import { useNavigate } from 'react-router-dom';
 
 const Favorites = () => {
@@ -11,6 +11,10 @@ const Favorites = () => {
   const navigate = useNavigate();
   // generated-by-copilot: track pending comment edits keyed by bookId
   const [editingComment, setEditingComment] = useState({});
+  // generated-by-copilot: state for the Clear All confirmation dialog
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [clearError, setClearError] = useState('');
+  const [isClearing, setIsClearing] = useState(false);
 
   useEffect(() => {
     if (!token) {
@@ -36,12 +40,49 @@ const Favorites = () => {
     setEditingComment(prev => { const next = { ...prev }; delete next[bookId]; return next; });
   };
 
+  // generated-by-copilot: handle the confirmed Clear All Favorites action
+  const handleConfirmClearAll = async () => {
+    if (!token) {
+      navigate('/');
+      return;
+    }
+    setIsClearing(true);
+    setClearError('');
+    const result = await dispatch(clearAllFavorites({ token }));
+    setIsClearing(false);
+    if (clearAllFavorites.rejected.match(result)) {
+      setClearError('Failed to clear favorites. Please try again.');
+      return;
+    }
+    setShowClearConfirm(false);
+    dispatch(fetchFavorites(token));
+  };
+
   if (status === 'loading') return <div>Loading...</div>;
   if (status === 'failed') return <div>Failed to load favorites.</div>;
 
   return (
     <div style={{ color: '#1f2933' }}>
-      <h2>My Favorite Books</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '700px', margin: '0 auto' }}>
+        <h2 style={{ margin: 0 }}>My Favorite Books</h2>
+        {favorites.length > 0 && (
+          <button
+            onClick={() => { setClearError(''); setShowClearConfirm(true); }}
+            aria-label="Clear all favorites"
+            style={{
+              background: '#fff',
+              color: '#b91c1c',
+              border: '1px solid #b91c1c',
+              borderRadius: '4px',
+              padding: '0.45rem 0.9rem',
+              cursor: 'pointer',
+              fontWeight: 600,
+            }}
+          >
+            Clear All
+          </button>
+        )}
+      </div>
       {favorites.length === 0 ? (
         <div style={{
           background: '#fff',
@@ -151,6 +192,77 @@ const Favorites = () => {
             );
           })}
         </ul>
+      )}
+      {/* generated-by-copilot: confirmation dialog for Clear All Favorites */}
+      {showClearConfirm && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="clear-all-title"
+          aria-describedby="clear-all-desc"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(15, 23, 42, 0.55)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+          }}
+          onClick={() => { if (!isClearing) setShowClearConfirm(false); }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              background: '#fff',
+              borderRadius: '8px',
+              padding: '1.5rem',
+              maxWidth: '420px',
+              width: '90%',
+              boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
+            }}
+          >
+            <h3 id="clear-all-title" style={{ marginTop: 0 }}>Clear all favorites?</h3>
+            <p id="clear-all-desc" style={{ color: '#374151' }}>
+              This will remove all {favorites.length} favorite book{favorites.length === 1 ? '' : 's'} and their comments. This action cannot be undone.
+            </p>
+            {clearError && (
+              <p role="alert" style={{ color: '#b91c1c', marginTop: '0.5rem' }}>{clearError}</p>
+            )}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem' }}>
+              <button
+                onClick={() => setShowClearConfirm(false)}
+                disabled={isClearing}
+                style={{
+                  background: '#fff',
+                  color: '#1f2933',
+                  border: '1px solid #9aa6b2',
+                  borderRadius: '4px',
+                  padding: '0.5rem 1rem',
+                  cursor: isClearing ? 'not-allowed' : 'pointer',
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmClearAll}
+                disabled={isClearing}
+                aria-label="Confirm clear all favorites"
+                style={{
+                  background: '#b91c1c',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '4px',
+                  padding: '0.5rem 1rem',
+                  cursor: isClearing ? 'not-allowed' : 'pointer',
+                  fontWeight: 600,
+                }}
+              >
+                {isClearing ? 'Clearing...' : 'Clear All'}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
